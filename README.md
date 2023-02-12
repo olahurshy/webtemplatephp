@@ -2,7 +2,7 @@
 
 ## Project setup
 ```
-npm install
+npm install Ola and SK
 ```
 
 ### Compiles and hot-reloads for development
