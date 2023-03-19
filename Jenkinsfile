@@ -1,43 +1,24 @@
 pipeline {
-     agent any
-     stages {
-         stage('Build') {
-             steps {
-                 echo 'Building...'
-
-                 checkmarxASTScanner additionalOptions: '--project-tags jenkins --scan-types sast,sca,kics --file-source https://github.com/group5five/ProjectCYT300.git'
-             }
-             post {
-                 always {
-                     jiraSendBuildInfo site: 'example.atlassian.net'
-                 }
-             }
-         }
-         stage('Deploy - Staging') {
-             when {
-                 branch 'main'
-             }
-             steps {
-                 echo 'Deploying to Staging from main...'
-             }
-             post {
-                 always {
-                     jiraSendDeploymentInfo environmentId: 'us-stg-1', environmentName: 'us-stg-1', environmentType: 'staging'
-                 }
-             }
-         }
-         stage('Deploy - Production') {
-            when {
-                branch 'mains'
-            }
+    agent any
+    options {
+        skipStagesAfterUnstable()
+    }
+    stages {
+        stage('Build') {
             steps {
-                echo 'Deploying to Production from main...'
+                git branch: 'main', url: 'https://github.com/group5five/CYT300.git'
             }
-            post {
-                always {
-                    jiraSendDeploymentInfo environmentId: 'us-prod-1', environmentName: 'us-prod-1', environmentType: 'production'
-                }
+        }
+        stage('Test') {
+            steps {
+                dependencyCheck additionalArguments: '', odcInstallation: 'CYT300'
             }
-         }
-     }
- }
+        }
+        stage('Deploy') {
+            steps {
+                sshPublisher(publishers: [sshPublisherDesc(configName: 'group5@cyt300-group5-webserver', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/var/www/cyt300-group5', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '**/*.php')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+            }
+        }
+    }
+}
+
