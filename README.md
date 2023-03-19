@@ -1,24 +1,29 @@
-# vue-super-star2
+# Simpson Vulnerable Web site !
 
-## Project setup
-```
-npm install Ola and SK
-```
+## Introduction
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+Just would like to share a little work of me, a simple vulnerable website about simpson.
+All the website is in French, sorry for others but too lazy to translate it :P
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## How to setup
 
-### Lints and fixes files
-```
-npm run lint
-```
+Simply import noob.sql, change login to "root" and no password (Yes I love informatic security ;) )
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+
+## Vulnerabilies to find
+
+* XSS
+* Weak cypher
+* SQLi 1
+* SQLi 2
+* CSRF
+* LFI
+
+
+## Credits
+Thanks for downloading this template!
+
+Template Name: Spot
+Template URL: https://templatemag.com/spot-bootstrap-freelance-template/
+Author: TemplateMag.com
+License: https://templatemag.com/license/
