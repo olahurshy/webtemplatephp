@@ -5,6 +5,7 @@ pipeline {
   }
   environment {
     HEROKU_API_KEY = credentials('heroku-api-key')
+    HEROKU_AUTH_TOKEN=credentials('heroku-auth-token')
     IMAGE_NAME = 'olahurshy/Project-5'
     IMAGE_TAG = 'latest'
     APP_NAME = 'cyt300-group5-project'
@@ -17,7 +18,7 @@ pipeline {
     }
     stage('Login') {
       steps {
-        sh 'echo $HEROKU_API_KEY | docker login --username=_ --password=$(heroku auth:token) registry.heroku.com'
+        sh 'echo $HEROKU_API_KEY | docker login --username=_ --password=$HEROKU_AUTH_TOKEN registry.heroku.com'
       }
     }
     stage('Push to Heroku registry') {
