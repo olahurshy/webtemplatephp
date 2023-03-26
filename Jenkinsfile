@@ -10,12 +10,12 @@ pipeline {
     IMAGE_TAG = 'latest'
     APP_NAME = 'cyt300-group5-project'
   }
-  // stages {
-    // stage('Build') {
-    //   steps {
-    //     // bat 'docker build -t $IMAGE_TAG .'
-    //   }
-    // }
+  stages {
+    stage('Build') {
+      steps {
+        bat 'docker build -t $IMAGE_TAG .'
+      }
+    }
     // stage('Login') {
     //   steps {
     //     bat 'echo $HEROKU_API_KEY | docker login --username=_ --password=$HEROKU_AUTH_TOKEN registry.heroku.com'
@@ -36,7 +36,7 @@ pipeline {
     //     '''
     //   }
     // }
-  // }
+  }
 //   post {
 //     always {
 //       bat 'docker logout'
