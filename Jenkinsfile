@@ -10,7 +10,7 @@ pipeline {
     IMAGE_TAG = 'latest'
     APP_NAME = 'cyt300-group5-project'
   }
-  stages {
+  // stages {
     // stage('Build') {
     //   steps {
     //     // bat 'docker build -t $IMAGE_TAG .'
@@ -36,7 +36,7 @@ pipeline {
     //     '''
     //   }
     // }
-  }
+  // }
 //   post {
 //     always {
 //       bat 'docker logout'
