@@ -17,7 +17,7 @@ pipeline {
     }
     stage('Login') {
       steps {
-        sh 'echo $HEROKU_API_KEY | docker login --username=_ --password=$(heroku authorizations:info jenkins-login) registry.heroku.com'
+        sh 'echo $HEROKU_API_KEY | docker login --username=_ --password=$(heroku container:login) registry.heroku.com'
       }
     }
     stage('Push to Heroku registry') {
