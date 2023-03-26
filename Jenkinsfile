@@ -5,8 +5,8 @@ pipeline {
   }
   environment {
     HEROKU_API_KEY = credentials('heroku-api-key')
-    HEROKU_AUTH_TOKEN=credentials('heroku-auth-token')
     IMAGE_NAME = 'olahurshy/project-5'
+    HEROKU_AUTH_TOKEN=credentials('heroku-auth-token')
     IMAGE_TAG = 'latest'
     APP_NAME = 'cyt300-group5-project'
   }
