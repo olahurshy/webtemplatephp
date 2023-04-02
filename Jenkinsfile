@@ -1,24 +1,45 @@
 pipeline {
-    agent any
-    options {
-        skipStagesAfterUnstable()
+  agent any
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '5'))
+  }
+  environment {
+    HEROKU_API_KEY = credentials('heroku-api-key')
+    IMAGE_NAME = 'olahurshy/project'
+    HEROKU_AUTH_TOKEN=credentials('heroku-auth-token')
+    IMAGE_TAG = 'latest'
+    APP_NAME = 'project-group-five'
+  }
+  stages {
+    stage('Build') {
+      steps {
+        bat 'docker build -t %IMAGE_NAME%:%IMAGE_TAG% .'
+      }
     }
-    stages {
-        stage('Build') {
-            steps {
-                git branch: 'main', url: 'https://github.com/group5five/CYT300.git'
-            }
-        }
-        stage('Test') {
-            steps {
-                dependencyCheck additionalArguments: '', odcInstallation: 'CYT300'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                sshPublisher(publishers: [sshPublisherDesc(configName: 'group5@cyt300-group5-webserver', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/var/www/cyt300-group5', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '**/*.php')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
-            }
-        }
+    stage('Login') {
+      steps {
+        bat 'echo %HEROKU_API_KEY% | docker login --username=_ --password=%HEROKU_AUTH_TOKEN% registry.heroku.com'
+      }
     }
+    stage('Push to Heroku registry') {
+      steps {
+        bat '''
+          docker tag %IMAGE_NAME%:%IMAGE_TAG% registry.heroku.com/%APP_NAME%/web
+          docker push registry.heroku.com/%APP_NAME%/web
+        '''
+      }
+    }
+    stage('Release the image') {
+      steps {
+        bat '''
+          heroku container:release web --app=%APP_NAME%
+        '''
+      }
+    }
+  }
+  post {
+    always {
+      bat 'docker logout'
+    }
+  }
 }
-
